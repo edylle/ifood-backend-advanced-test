@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpClientErrorException;
 
 import br.com.ifood.model.responde.ResponseModel;
 import br.com.ifood.repository.WeatherCallRepository;
@@ -26,14 +27,26 @@ public class SuggestionController {
 	@GetMapping("/city")
 	public ResponseModel findByCityName(@RequestParam(value = "name") String name) {
 		try {
+
 			return weatherCallRepository.getWeatherBy(name);
+
+		} catch(HttpClientErrorException e) {
+			logger.error(e.getMessage(), e);
+			ResponseModel response = new ResponseModel();
+
+			response.setCode(HttpStatus.NOT_FOUND.value());
+			response.setStatus(HttpStatus.NOT_FOUND.getReasonPhrase());
+			response.setMessages(Arrays.asList(e.getMessage()));
+			
+			return response;
+
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			ResponseModel response = new ResponseModel();
 
 			response.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
 			response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
-			response.setMessages(Arrays.asList("Unknown error"));
+			response.setMessages(Arrays.asList("UNKNOWN ERROR"));
 			
 			return response;
 		}
@@ -44,6 +57,7 @@ public class SuggestionController {
 										  @RequestParam(value = "long") Double longitude) {
 
 		try {
+
 			return weatherCallRepository.getWeatherBy(latitude, longitude);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
