@@ -95,7 +95,7 @@ public class OpenWeatherService {
 
 			Double temperature = Double.valueOf(weather.getMain().getTemp());
 
-			messages.add("CALLS IN THE LAST MINUTE: " + weatherRepository.getRequestsCount());
+			messages.add("EXTERNAL API REQUESTS IN THE LAST MINUTE: " + weatherRepository.getRequestsCount());
 			messages.add("TEMPERATURE: " + temperature);
 
 			response.setTemperature(temperature);
@@ -182,7 +182,7 @@ public class OpenWeatherService {
 
 			Double temperature = Double.valueOf(weather.getMain().getTemp());
 
-			messages.add("CALLS IN THE LAST MINUTE: " + weatherRepository.getRequestsCount());
+			messages.add("EXTERNAL API REQUESTS IN THE LAST MINUTE: " + weatherRepository.getRequestsCount());
 			messages.add("TEMPERATURE: " + temperature);
 
 			response.setTemperature(temperature);

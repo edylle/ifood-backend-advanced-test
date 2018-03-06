@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.HttpClientErrorException;
 
 import br.com.ifood.facade.SuggestionFacade;
 import br.com.ifood.model.responde.ResponseModel;
@@ -30,16 +29,6 @@ public class SuggestionController {
 		try {
 			return suggestionFacade.getTracksBy(nomalizeText(name));
 
-		} catch (HttpClientErrorException e) {
-			logger.error(e.getMessage(), e);
-			ResponseModel response = new ResponseModel();
-
-			response.setCode(HttpStatus.NOT_FOUND.value());
-			response.setStatus(HttpStatus.NOT_FOUND.getReasonPhrase());
-			response.setMessages(Arrays.asList(e.getMessage()));
-
-			return response;
-
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			ResponseModel response = new ResponseModel();
@@ -57,16 +46,6 @@ public class SuggestionController {
 										  @RequestParam(value = "lon") Double longitude) {
 		try {
 			return suggestionFacade.getTracksBy(latitude, longitude);
-
-		} catch (HttpClientErrorException e) {
-			logger.error(e.getMessage(), e);
-			ResponseModel response = new ResponseModel();
-
-			response.setCode(HttpStatus.NOT_FOUND.value());
-			response.setStatus(HttpStatus.NOT_FOUND.getReasonPhrase());
-			response.setMessages(Arrays.asList(e.getMessage()));
-
-			return response;
 
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);

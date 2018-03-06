@@ -1,14 +1,14 @@
 package br.com.ifood;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import br.com.ifood.service.TemperatureService;
+import br.com.ifood.strategy.TemperatureContext;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -16,19 +16,19 @@ public class IfoodBackendAdvancedTestApplicationTests {
 
 	@Test
 	public void testTemperature() {
-		TemperatureService spotifyService = new TemperatureService();
 
-		assertTrue(spotifyService.isHot(32D));
-		assertFalse(spotifyService.isHot(10D));
+		assertSame("party", new TemperatureContext(32D).getSuggestion());
+		assertNotSame("party", new TemperatureContext(10D).getSuggestion());
 
-		assertTrue(spotifyService.isAverage(28D));
-		assertFalse(spotifyService.isAverage(14D));
+		assertSame("pop", new TemperatureContext(28D).getSuggestion());
+		assertNotSame("pop", new TemperatureContext(14D).getSuggestion());
 
-		assertTrue(spotifyService.isChilly(14D));
-		assertFalse(spotifyService.isChilly(9D));
+		assertSame("rock", new TemperatureContext(14D).getSuggestion());
+		assertNotSame("rock", new TemperatureContext(9D).getSuggestion());
 
-		assertTrue(spotifyService.isFreezing(-10D));
-		assertFalse(spotifyService.isFreezing(22D));
+		assertSame("classical", new TemperatureContext(-10D).getSuggestion());
+		assertNotSame("classical", new TemperatureContext(22D).getSuggestion());
+
 	}
 
 }

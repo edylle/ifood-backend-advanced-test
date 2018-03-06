@@ -13,8 +13,8 @@ import br.com.ifood.client.SpotifyClient;
 import br.com.ifood.model.spotify.Items;
 import br.com.ifood.model.spotify.Query;
 import br.com.ifood.model.spotify.Token;
-import br.com.ifood.propeties.SongProperties;
 import br.com.ifood.repository.SpotifyRepository;
+import br.com.ifood.strategy.TemperatureContext;
 import br.com.ifood.utils.DateUtils;
 
 @Service
@@ -26,10 +26,6 @@ public class SpotifyService {
 	private SpotifyRepository spotifyRepository;
 	@Autowired
 	private SpotifyClient spotifyClient;
-	@Autowired
-	private SongProperties songProperties;
-	@Autowired
-	private TemperatureService temperatureService;
 
 	public String getToken() {
 		Date currentTime = new Date();
@@ -38,7 +34,7 @@ public class SpotifyService {
 			return spotifyRepository.getToken();
 		}
 
-		logger.info("REFRESHING TOKEN...");
+		logger.info("REFRESHING SPOTIFY TOKEN...");
 		Token token = spotifyClient.getToken();
 
 		spotifyRepository.setToken(token.getAccess_token());
@@ -49,22 +45,8 @@ public class SpotifyService {
 
 	public List<String> getTracksBy(Double temperature) {
 		List<String> result = new ArrayList<>();
-		String query = "";
 
-		if (temperatureService.isHot(temperature)) {
-			query = songProperties.getHot();
-
-		} else if (temperatureService.isAverage(temperature)) {
-			query = songProperties.getAverage();
-
-		} else if (temperatureService.isChilly(temperature)) {
-			query = songProperties.getChilly();
-
-		} else if (temperatureService.isFreezing(temperature)) {
-			query = songProperties.getFreezing();
-
-		}
-
+		String query = new TemperatureContext(temperature).getSuggestion();
 		Query queryResult = spotifyClient.getTracksBy(query, getToken());
 
 		for (Items item : queryResult.getTracks().getItems()) {
@@ -73,6 +55,5 @@ public class SpotifyService {
 
 		return result;
 	}
-
 
 }

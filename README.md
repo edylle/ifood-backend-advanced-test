@@ -19,6 +19,8 @@ This project was built over very well known and trusted technologies and framewo
  - Java 8;
  - Spring Boot;
  - Maven;
+ - jUnit;
+ - Hystrix.
  
 If you need to apply any changes in the project, such as OpenWeather and Spotify credentials, you can do so by modifying applications.properties file located at "src/main/resources" directory.
  <br />
@@ -51,7 +53,7 @@ Once the system is up and running, if you haven't made any changes in applicatio
     "code": 200,
     "messages": [
         "MAKING NEW REQUEST FOR THE CITY: Campinas",
-        "CALLS IN THE LAST MINUTE: 1",
+        "EXTERNAL API REQUESTS IN THE LAST MINUTE: 1",
         "TEMPERATURE: 21.0"
     ],
     "result": [
@@ -90,7 +92,7 @@ Once the system is up and running, if you haven't made any changes in applicatio
     "code": 200,
     "messages": [
         "MAKING NEW REQUEST FOR THE LATITUDE 43.7 AND LONGITUDE -79.42",
-        "CALLS IN THE LAST MINUTE: 2",
+        "EXTERNAL API REQUESTS IN THE LAST MINUTE: 2",
         "TEMPERATURE: -2.25"
     ],
     "result": [
@@ -115,5 +117,49 @@ Once the system is up and running, if you haven't made any changes in applicatio
         "Johannespassion, BWV 245, Pt. 1: No. 11 Choral: Wer hat dich so geschlagen",
         "Johannespassion, BWV 245, Pt. 1: No. 12 a-c Rezitativ: Und Hannas sandte ihn gebunden"
     ]
+}
+```
+
+### 2. Error Responses
+
+##### 2.1. Error response caused by timeout
+	1. JSON response (example)
+
+```javascript
+{
+    "status": "OK",
+    "code": 200,
+    "messages": [
+        "IT LOOKS LIKE THAT EXTERNAL APIs ARE OUT OF SERVICE",
+        "MAX TIMEOUT ACCEPTED (IN SECONDS): 10",
+        "RETURNING EDYLLE's TRACKS SUGGESTIONS INSTEAD"
+    ],
+    "result": [
+        "Staiway to Heaven",
+        "Sultans of Swing",
+        "The Thrill is Gone",
+        "All Along the Watchtower",
+        "Europa",
+        "Fur Elise",
+        "Serrado",
+        "Bohemian Rhapsody",
+        "Part-Time Lover",
+        "Billie Jean",
+        "Comfortably Numb"
+    ]
+}
+```
+
+##### 2.2. Error response caused by unknown reasons
+	1. JSON response (example)
+
+```javascript
+{
+    "status": "Internal Server Error",
+    "code": 500,
+    "messages": [
+        "UNKNOWN ERROR"
+    ],
+    "result": null
 }
 ```
