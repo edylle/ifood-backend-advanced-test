@@ -2,7 +2,12 @@ package br.com.ifood.model.responde;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class ResponseModel {
+
+	@JsonIgnore
+	private Double temperature;
 
 	private String status;
 	private Integer code;
@@ -10,6 +15,14 @@ public class ResponseModel {
 	private Object result;
 
 	// GETTERS AND SETTERS
+	public Double getTemperature() {
+		return temperature;
+	}
+
+	public void setTemperature(Double temperature) {
+		this.temperature = temperature;
+	}
+
 	public String getStatus() {
 		return status;
 	}

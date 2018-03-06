@@ -3,7 +3,7 @@ package br.com.ifood.model.spotify;
 public class Token {
 
 	private String scope;
-	private String expires_in;
+	private Integer expires_in;
 	private String token_type;
 	private String access_token;
 
@@ -16,11 +16,11 @@ public class Token {
 		this.scope = scope;
 	}
 
-	public String getExpires_in() {
+	public Integer getExpires_in() {
 		return expires_in;
 	}
 
-	public void setExpires_in(String expires_in) {
+	public void setExpires_in(Integer expires_in) {
 		this.expires_in = expires_in;
 	}
 

@@ -4,20 +4,20 @@ import java.util.Date;
 
 public class WeatherDateDTO {
 
-	private Integer weather;
+	private Double weather;
 	private Date date;
 
-	public WeatherDateDTO(Integer weather, Date date) {
+	public WeatherDateDTO(Double weather, Date date) {
 		this.weather = weather;
 		this.date = date;
 	}
 
 	// GETTERS AND SETTERS
-	public Integer getWeather() {
+	public Double getWeather() {
 		return weather;
 	}
 
-	public void setWeather(Integer weather) {
+	public void setWeather(Double weather) {
 		this.weather = weather;
 	}
 

@@ -1,65 +1,99 @@
 package br.com.ifood.service;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.support.BasicAuthorizationInterceptor;
 import org.springframework.stereotype.Component;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
+import br.com.ifood.client.SpotifyClient;
+import br.com.ifood.model.spotify.Items;
 import br.com.ifood.model.spotify.Query;
 import br.com.ifood.model.spotify.Token;
-import br.com.ifood.propeties.SpotifyProperties;
+import br.com.ifood.propeties.SongProperties;
+import br.com.ifood.repository.SpotifyRepository;
+import br.com.ifood.utils.DateUtils;
 
 @Component
 @Scope(scopeName = "singleton")
 public class SpotifyService {
 
+	private final Logger logger = LoggerFactory.getLogger(SpotifyService.class);
+
+	private static final Double HOT = 31D;
+	private static final Double AVERAGE_MIN = 15D;
+	private static final Double AVERAGE_MAX = 30D;
+	private static final Double CHILLY_MIN = 10D;
+	private static final Double CHILLY_MAX = 14D;
+	private static final Double FREEZING = 13D;
+
 	@Autowired
-	private SpotifyProperties spotifyProperties;
+	private SpotifyRepository spotifyRepository;
+	@Autowired
+	private SpotifyClient spotifyClient;
+	@Autowired
+	private SongProperties songProperties;
 
-	public Token getToken() {
-		RestTemplate restTemplate = new RestTemplate();
+	public String getToken() {
+		Date currentTime = new Date();
 
-		restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(spotifyProperties.getClientID(), spotifyProperties.getClientSecret()));
+		if (spotifyRepository.isTokenValid(currentTime)) {
+			return spotifyRepository.getToken();
+		}
 
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		logger.info("REFRESHING TOKEN...");
+		Token token = spotifyClient.getToken();
 
-		MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
-		map.add("grant_type", "client_credentials");
+		spotifyRepository.setToken(token.getAccess_token());
+		spotifyRepository.setTimeLimit(DateUtils.addSecondsTo(currentTime, token.getExpires_in()));
 
-		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
-
-		ResponseEntity<Token> response = restTemplate.exchange(spotifyProperties.getTokenUrl(), HttpMethod.POST, request, Token.class);
-
-		return response.getBody();
+		return token.getAccess_token();
 	}
 
-	public Query getTracksBy(String query, String accessToken) {
+	public List<String> getTracksBy(Double temperature) {
+		List<String> result = new ArrayList<>();
+		String query = "";
 
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Authorization", "Bearer " + accessToken);
-		HttpEntity<String> entity = new HttpEntity<String>(headers);
+		if (isHot(temperature)) {
+			query = songProperties.getHot();
 
-		RestTemplate restTemplate = new RestTemplate();
-		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(spotifyProperties.getSearchUrl());
+		} else if (isAverage(temperature)) {
+			query = songProperties.getAverage();
 
-		builder.queryParam("q", query);
-		builder.queryParam("type", spotifyProperties.getType());
-		builder.queryParam("market", spotifyProperties.getMarket());
-		builder.queryParam("limit", spotifyProperties.getLimit());
+		} else if (isChilly(temperature)) {
+			query = songProperties.getChilly();
 
-		ResponseEntity<Query> response = restTemplate.exchange(builder.buildAndExpand().toUri(), HttpMethod.GET, entity, Query.class);
+		} else if (isFreeziing(temperature)) {
+			query = songProperties.getFreezing();
 
-		return response.getBody();
+		}
+
+		Query queryResult = spotifyClient.getTracksBy(query, getToken());
+
+		for (Items item : queryResult.getTracks().getItems()) {
+			result.add(item.getName());
+		}
+
+		return result;
 	}
 
+	private boolean isHot(Double temperature) {
+		return temperature.compareTo(HOT) >= 0;
+	}
+
+	private boolean isAverage(Double temperature) {
+		return temperature.compareTo(AVERAGE_MIN) >= 0 && temperature.compareTo(AVERAGE_MAX) <= 0;
+	}
+
+	private boolean isChilly(Double temperature) {
+		return temperature.compareTo(CHILLY_MIN) >= 0 && temperature.compareTo(CHILLY_MAX) <= 0;
+	}
+
+	private boolean isFreeziing(Double temperature) {
+		return temperature.compareTo(FREEZING) <= 0;
+	}
 }

@@ -17,12 +17,14 @@ public class OpenWeatherProperties {
 	private String url;
 	private String units;
 	private String appId;
+	private Integer limitCallsPerMinute;
 
 	@PostConstruct
 	public void init() {
 		url = environment.getProperty("openweather.api.url");
 		units = environment.getProperty("openweather.api.units");
 		appId = environment.getProperty("openweather.api.appid");
+		limitCallsPerMinute = Integer.valueOf(environment.getProperty("openweather.api.limit.calls.per.minute"));
 	}
 
 	// GETTERS
@@ -48,6 +50,10 @@ public class OpenWeatherProperties {
 
 	public void setAppId(String appId) {
 		this.appId = appId;
+	}
+
+	public Integer getLimitCallsPerMinute() {
+		return limitCallsPerMinute;
 	}
 
 }
