@@ -1,6 +1,8 @@
 
 # iFood Backend Advanced Test
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/3a9f456255d045c8b27f49f55bf30aa5)](https://www.codacy.com/app/edylle/ifood-backend-advanced-test?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=edylle/ifood-backend-advanced-test&amp;utm_campaign=Badge_Grade)
+
 This project is my personal solution for the iFood Backend Advanced Test.
 <br/>
 
