@@ -85,8 +85,9 @@ public class SuggestionController {
 			return "";
 		}
 
-		text = Normalizer.normalize(text, Normalizer.Form.NFD);
-		return text.replaceAll("[^\\p{ASCII}]", "");
+		String normalizedText = text;
+		normalizedText = Normalizer.normalize(text, Normalizer.Form.NFD);
+		return normalizedText.replaceAll("[^\\p{ASCII}]", "");
 	}
 
 }

@@ -43,7 +43,7 @@ Once the system is up and running, if you haven't made any changes in applicatio
 
 	2. JSON response (example)
 
-```
+```javascript
 {
     "status": "OK",
     "code": 200,
@@ -82,7 +82,7 @@ Once the system is up and running, if you haven't made any changes in applicatio
 
 	2. JSON response (example)
 
-```
+```javascript
 {
     "status": "OK",
     "code": 200,
