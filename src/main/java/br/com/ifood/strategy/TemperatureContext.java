@@ -12,7 +12,8 @@ public class TemperatureContext {
 
 	public TemperatureContext(Double temperature) {
 		if (temperature == null) {
-			temperature = 0D;
+			this.temperature = 0D;
+			return;
 		}
 
 		this.temperature = temperature;
