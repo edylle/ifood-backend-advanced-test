@@ -29,11 +29,11 @@ If you need to apply any changes in the project, such as OpenWeather and Spotify
 
     mvn clean package
 
-This command will generate a .jar file named "ifood-backend-advanced-test.jar" in a folder called "target" inside the project's directory.
+This command will generate a .jar file named "ifood.jar" in a folder called "target" inside the project's directory.
 <br />
-In order to run the build, enter the following command line in terminal (make sure you are in the same directory where ifood-backend-advanced-test.jar file is):
+In order to run the build, enter the following command line in terminal (make sure you are in the same directory where ifood.jar file is):
 
-    java -jar ifood-backend-advanced-test.jar
+    java -jar ifood.jar
 
 Once the system is up and running, if you haven't made any changes in applications.properties, it is possible to access its endpoints by the URI http://localhost:8080/ifood/suggestion
 

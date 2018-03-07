@@ -46,6 +46,7 @@ public class OpenWeatherService {
 			if (DateUtils.addMinutesTo(weatherRepository.getMapCity().get(cityName).getDate(), 10).before(currentTime)) {
 				try {
 					weatherRepository.getMapCity().put(cityName, new WeatherDateDTO(response.getTemperature(), currentTime));
+					weatherRepository.getMapCity().remove(cityName);
 					response = callWeatherServiceBy(cityName);
 
 				} catch (LimitExceededException e) {
